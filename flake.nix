@@ -34,7 +34,9 @@
       # Provide some binary packages for selected system types.
       packages = forAllSystems (system:
         {
-          usbguard-applet-qt = nur-modules.${system}.repos.mloeper.usbguard-applet-qt;
+          usbguard-applet-qt = nur-modules.${system}.repos.mloeper.usbguard-applet-qt.overrideAttrs (finalAttrs: previousAttrs: {
+            src = ./.;
+          });
         }
       );
 

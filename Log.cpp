@@ -19,4 +19,4 @@
 
 #include "Log.h"
 
-Q_LOGGING_CATEGORY(LOG, "usbguard.applet-qt", QtWarningMsg)
+Q_LOGGING_CATEGORY(LOG, "usbguard.applet-qt", QtDebugMsg)

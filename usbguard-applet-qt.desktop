@@ -8,3 +8,5 @@ Exec=usbguard-applet-qt
 Icon=usbguard-icon
 Categories=System;
 Keywords=USB;USBGuard;Applet;Qt;
+StartupWMClass=usbguard-applet-qt
+SingleMainWindow=false

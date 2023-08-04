@@ -36,6 +36,8 @@
         {
           usbguard-applet-qt = nur-modules.${system}.repos.mloeper.usbguard-applet-qt.overrideAttrs (finalAttrs: previousAttrs: {
             src = ./.;
+            #TODO: remove version
+            version = "1.0.0";
           });
         }
       );

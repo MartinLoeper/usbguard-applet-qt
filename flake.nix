@@ -27,16 +27,6 @@
         pkgs = nixpkgs.legacyPackages.${system};
       });
 
-      # Nixpkgs instantiated for supported system types.
-      nixpkgsFor = forAllSystems (system: import nixpkgs { 
-        inherit system; 
-        overlays = [ 
-          (final: prev: {
-            usbguard-applet-qt = nur-modules.${system}.repos.mloeper.usbguard-applet-qt;
-          })
-        ]; 
-      });
-
     in
 
     {
@@ -44,17 +34,10 @@
       # Provide some binary packages for selected system types.
       packages = forAllSystems (system:
         {
-          inherit (nixpkgsFor.${system}) usbguard-applet-qt;
-        });
+          usbguard-applet-qt = nur-modules.${system}.repos.mloeper.usbguard-applet-qt;
+        }
+      );
 
       defaultPackage = forAllSystems (system: self.packages.${system}.usbguard-applet-qt);
-
-      nixosModules.usbguard-applet-qt =
-        { pkgs, ... }:
-        {
-          nixpkgs.overlays = [ self.overlay ];
-
-          environment.systemPackages = [ pkgs.usbguard-applet-qt ];
-        };
     };
 }

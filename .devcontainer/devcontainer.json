@@ -1,0 +1,22 @@
+{
+	"name": "USBGuard Applet - Dev",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"runArgs": [
+  		"--userns=keep-id",
+		"-v", "${localEnv:XDG_RUNTIME_DIR}:${localEnv:XDG_RUNTIME_DIR}",
+		"-v", "/tmp/.X11-unix:/tmp/.X11-unix",
+		"-e", "XDG_RUNTIME_DIR",
+		"-e", "DISPLAY"
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cpptools-extension-pack"
+			]
+		}
+	},
+	"containerUser": "vscode",
+ 	"updateRemoteUserUID": true
+}

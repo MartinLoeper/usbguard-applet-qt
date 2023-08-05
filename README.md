@@ -18,6 +18,7 @@ The strategy is based on the following tutorial: https://blog.jchw.io/vs-code-wi
 - `Build: CTRL + SHIFT + B`
 - `(Build) & Run: SHIFT + F5`
 - `Debug: F5`
+- `(Build) & Test: CTRL + SHIFT + SPACE` -> runs test task (keybinding added via nix home-manager)
 
 ### QTCreator
 
@@ -36,3 +37,15 @@ Replace the logging category in `Log.cpp` with: `Q_LOGGING_CATEGORY(LOG, "usbgua
 
 Note: Replace `cs_CZ` with your target language.
 For more information see: [TRANSLATIONS.md](./TRANSLATIONS.md)
+
+## Resources
+
+### Settings
+
+The QSettings are stored under `~/.config/USBGuard/usbguard-applet-qt.conf` by default.
+It did not find a good way to manage them via home-manager yet as I want them to be both: predefined by the distro and overridable by the user.
+
+### Icons
+
+The icons are packaged into the qt app using the [QR Resource System](https://doc.qt.io/qt-5/resources.html).
+It works well for the language files but since the systray compat in gnome is broken, it does not work well for displaying systray icons.

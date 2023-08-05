@@ -16,9 +16,11 @@ The strategy is based on the following tutorial: https://blog.jchw.io/vs-code-wi
 ### VS Code CMake Shortcuts
 
 - `Build: CTRL + SHIFT + B`
-- `(Build) & Run: SHIFT + F5`
-- `Debug: F5`
+- `(Build) & Run: SHIFT + F5` -> note: you must set and export `QT_QPA_PLATFORM=wayland` for this to work (see flake.nix)
+- `Debug: F5` -> note: you must set and export `QT_QPA_PLATFORM=wayland` for this to work (see flake.nix)
 - `(Build) & Test: CTRL + SHIFT + SPACE` -> runs test task (keybinding added via nix home-manager)
+
+Note: As is, under wayland we either need to use the nix qtWrapper or set the env var `QT_QPA_PLATFORM=wayland` (WORKAROUND!)
 
 ### QTCreator
 

@@ -70,8 +70,8 @@ MainWindow::MainWindow(QWidget* parent) :
   qRegisterMetaType<Rule::Target>("Rule::Target");
   QObject::connect(&_bridge, SIGNAL(devicePresenceChanged(uint, DeviceManager::EventType, Rule::Target, const QString &)),
     this, SLOT(handleDevicePresenceChange(uint, DeviceManager::EventType, Rule::Target, const QString&)));
-  QObject::connect(&_bridge, SIGNAL(devicePolicyChanged(uint, Rule::Target, Rule::Target, const QString&, uint)),
-    this, SLOT(handleDevicePolicyChange(uint, Rule::Target, Rule::Target, const QString&, uint)));
+  QObject::connect(&_bridge, SIGNAL(devicePolicyApplied(uint, Rule::Target, const QString&, uint)),
+    this, SLOT(handleDevicePolicyApplied(uint, Rule::Target, const QString&, uint)));
   QObject::connect(&_bridge, SIGNAL(serviceAvailable()),
     this, SLOT(handleDBusConnect()));
   QObject::connect(&_bridge, SIGNAL(serviceUnavailable()),
@@ -95,10 +95,16 @@ void MainWindow::setupSystemTray()
   auto menu = new QMenu();
   auto quit_action = new QAction(tr("Quit"), systray);
   menu->addAction(quit_action);
-  systray->setContextMenu(menu);
   QObject::connect(quit_action, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+  auto open_action = new QAction(tr("OpenPanel"), systray);
+  menu->addAction(open_action);
+  QObject::connect(open_action, SIGNAL(triggered()), this, SLOT(toggleMainWindowVisibility()));
+  systray->setContextMenu(menu);
+  
   QObject::connect(systray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
     this, SLOT(switchVisibilityState(QSystemTrayIcon::ActivationReason)));
+  
   QObject::connect(&_flash_timer, SIGNAL(timeout()),
     this, SLOT(flashStep()));
   systray->show();
@@ -126,16 +132,18 @@ void MainWindow::switchVisibilityState(QSystemTrayIcon::ActivationReason reason)
   if (reason == QSystemTrayIcon::Context) {
     systray->contextMenu()->show();
   }
-  else {
-    if (!isVisible() || (windowState() & Qt::WindowMinimized)) {
-      qCDebug(LOG) << "Showing main window";
-      showNormal();
-      stopFlashing();
-    }
-    else {
-      qCDebug(LOG) << "Minimizing main window";
-      showMinimized();
-    }
+}
+
+void MainWindow::toggleMainWindowVisibility()
+{
+  qCDebug(LOG) << "toggleMainWindowVisibility";
+
+  if (!isVisible() || (windowState() & Qt::WindowMinimized)) {
+    qCDebug(LOG) << "Showing main window";
+    activateWindow();
+    showNormal();
+    raise();
+    stopFlashing();
   }
 }
 
@@ -230,20 +238,21 @@ void MainWindow::handleDevicePresenceChange(uint id,
   notifyDevicePresenceChanged(event, device_rule);
 }
 
-void MainWindow::handleDevicePolicyChange(uint id,
-  Rule::Target target_old,
+void MainWindow::handleDevicePolicyApplied(uint id,
   Rule::Target target_new,
   const QString& device_rule_string,
   uint rule_id)
 {
-  (void)target_old;
   auto device_rule = Rule::fromString(device_rule_string);
   _device_model.updateDeviceTarget(id, target_new);
   ui->device_view->expandAll();
   notifyDevicePolicyChanged(device_rule, rule_id);
 
+  qCDebug(LOG) << "Showing dialog window: " << " " << device_rule << " " << rule_id << " " << Rule::ImplicitID << " " << target_new << " " << Rule::Target::Block;
+
   if (target_new == Rule::Target::Block &&
-    rule_id == Rule::ImplicitID) {
+    rule_id == 0) {
+    
     showDeviceDialog(id, device_rule);
   }
 }
@@ -350,6 +359,7 @@ void MainWindow::notify(const QString& title, QSystemTrayIcon::MessageIcon icon,
 
 void MainWindow::showNotification(QSystemTrayIcon::MessageIcon icon, const QString& title, const QString& message)
 {
+  qCDebug(LOG) << "Notify: " << message;
   systray->showMessage(title, message, icon);
 }
 
@@ -492,13 +502,13 @@ void MainWindow::handleDBusDisconnect()
 
 void MainWindow::handleDeviceInsert(quint32 id, const Rule& device_rule)
 {
-  qCDebug(LOG) << "id=" << id << " device_rule=" << device_rule;
+  //qCDebug(LOG) << "id=" << id << " device_rule=" << device_rule;
   loadDeviceList();
 }
 
 void MainWindow::handleDeviceRemove(quint32 id, const Rule& device_rule)
 {
-  qCDebug(LOG) << "id=" << id << " device_rule=" << device_rule;
+  //qCDebug(LOG) << "id=" << id << " device_rule=" << device_rule;
   _device_model.removeDevice(id);
   ui->device_view->expandAll();
 }
@@ -650,17 +660,6 @@ void MainWindow::changeEvent(QEvent* e)
   if (e->type() == QEvent::LanguageChange) {
     qCDebug(LOG) << "QEvent::LanguageChange";
     ui->retranslateUi(this);
-  }
-  else if (e->type() == QEvent::WindowStateChange) {
-    qCDebug(LOG) << "QEvent::WindowStateChange";
-    QWindowStateChangeEvent* event = \
-      static_cast<QWindowStateChangeEvent*>(e);
-
-    if (!(event->oldState() & Qt::WindowMinimized)
-      && (windowState() & Qt::WindowMinimized)) {
-      qCDebug(LOG) << "Qt::WindowMinimized";
-      QTimer::singleShot(250, this, SLOT(hide()));
-    }
   }
 
   QMainWindow::changeEvent(e);

@@ -378,6 +378,11 @@
     <string>Quit</string>
    </property>
   </action>
+  <action name="actionOpenPanel">
+   <property name="text">
+    <string>Open Panel</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

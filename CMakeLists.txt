@@ -79,3 +79,7 @@ install(FILES usbguard-applet-qt.desktop
   DESTINATION "${CMAKE_INSTALL_DATADIR}/applications")
 install(FILES resources/usbguard-icon.svg
   DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps")
+install(FILES resources/usbguard-icon-inactive.svg
+  DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps")
+  install(FILES resources/usbguard-icon-warning.svg
+  DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps")

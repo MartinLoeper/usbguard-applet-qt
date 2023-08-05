@@ -27,6 +27,8 @@
         pkgs = nixpkgs.legacyPackages.${system};
       });
 
+      repo-dir = ./.;
+
     in
 
     {
@@ -41,5 +43,35 @@
       );
 
       defaultPackage = forAllSystems (system: self.packages.${system}.usbguard-applet-qt);
+
+      devShell = forAllSystems (system: let 
+        pkgs = import nixpkgs {
+          inherit system;
+        };
+      in
+        pkgs.mkShell {
+          nativeBuildInputs = with pkgs; [ 
+            bashInteractive
+          ];
+
+          buildInputs = with pkgs; [
+            qt5.qtbase
+            qtcreator
+          ];
+
+          inputsFrom = [
+            self.outputs.defaultPackage.${system}
+          ];
+
+          SHELL = "${pkgs.bashInteractive}/bin/bash";
+          
+          shellHook = ''
+            export SHELL="${pkgs.bashInteractive}/bin/bash"
+            export QT_QPA_PLATFORM=wayland
+            export XDG_DATA_DIRS=${repo-dir}/resources:$GSETTINGS_SCHEMA_PATH:$XDG_DATA_DIRS
+            export ADDITIONAL_XDG_DATA_DIRS=${repo-dir}/resources:$GSETTINGS_SCHEMA_PATH
+          '';
+        }
+      );
     };
 }

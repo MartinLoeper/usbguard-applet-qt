@@ -42,6 +42,7 @@ public:
 
 protected Q_SLOTS:
   void switchVisibilityState(QSystemTrayIcon::ActivationReason reason);
+  void toggleMainWindowVisibility();
   void flashStep();
   void dbusTryConnect();
 
@@ -54,8 +55,7 @@ protected Q_SLOTS:
     Rule::Target target,
     const QString& device_rule);
 
-  void handleDevicePolicyChange(uint id,
-    Rule::Target target_old,
+  void handleDevicePolicyApplied(uint id,
     Rule::Target target_new,
     const QString& device_rule,
     uint rule_id);

@@ -248,10 +248,11 @@ void MainWindow::handleDevicePolicyApplied(uint id,
   ui->device_view->expandAll();
   notifyDevicePolicyChanged(device_rule, rule_id);
 
-  qCDebug(LOG) << "Showing dialog window: " << " " << device_rule << " " << rule_id << " " << Rule::ImplicitID << " " << target_new << " " << Rule::Target::Block;
+  qCDebug(LOG) << "Evaluating whether to show dialog window: " << " " << device_rule << " " << rule_id << " " << Rule::ImplicitID << " " << target_new << " " << Rule::Target::Block;
 
+  // honestly, idk why sometimes the rule_id is 0 instead of Rule::ImplicitID
   if (target_new == Rule::Target::Block &&
-    rule_id == 0) {
+    rule_id == 0 || rule_id == Rule::ImplicitID) {
     
     showDeviceDialog(id, device_rule);
   }

@@ -52,6 +52,12 @@
         pkgs.mkShell {
           nativeBuildInputs = with pkgs; [ 
             bashInteractive
+            # vscode intellisense support
+            # see also: vscode userSettings C_Cpp.default.compilerPath
+            gcc
+
+            # you can create the wrapper using: source $stdenv/setup && makeQtWrapper
+            libsForQt5.qt5.wrapQtAppsHook
           ];
 
           buildInputs = with pkgs; [
@@ -67,9 +73,13 @@
           
           shellHook = ''
             export SHELL="${pkgs.bashInteractive}/bin/bash"
-            export QT_QPA_PLATFORM=wayland
-            export XDG_DATA_DIRS=${repo-dir}/resources:$GSETTINGS_SCHEMA_PATH:$XDG_DATA_DIRS
-            export ADDITIONAL_XDG_DATA_DIRS=${repo-dir}/resources:$GSETTINGS_SCHEMA_PATH
+
+            # the following works but introduces other strange bugs, make a QT wrapper instead
+            #export QT_QPA_PLATFORM=wayland
+
+            # TODO: do not seem to work
+            #export XDG_DATA_DIRS=${repo-dir}/resources:$GSETTINGS_SCHEMA_PATH:$XDG_DATA_DIRS
+            #export ADDITIONAL_XDG_DATA_DIRS=${repo-dir}/resources:$GSETTINGS_SCHEMA_PATH
           '';
         }
       );

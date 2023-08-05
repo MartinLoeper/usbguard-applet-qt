@@ -7,7 +7,7 @@ You can also install from [NUR](https://nur.nix-community.org/repos/mloeper/) if
 
 ## Developing
 
-Navigate to the repo root and run: `nix develop path://$PWD -c code $PWD`
+Navigate to the repo root and run: `./scripts/ncode`
 Note: VSCode might have to be closed for this to work. Run the command from a standalone terminal.
 
 We pull all dependencies onto the path using the devshell mechanism and rely on the vscode extensions to discover them proberly from there on. If something is not auto-discovered properly, we tweak the config using workspace-relative .vscode `settings.json`.
@@ -16,7 +16,7 @@ The strategy is based on the following tutorial: https://blog.jchw.io/vs-code-wi
 ### VS Code CMake Shortcuts
 
 - `Build: CTRL + SHIFT + B`
-- `Run: SHIFT + F5`
+- `(Build) & Run: SHIFT + F5`
 - `Debug: F5`
 
 ### QTCreator

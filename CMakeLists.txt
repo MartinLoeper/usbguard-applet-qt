@@ -53,6 +53,7 @@ set(applet_RESOURCES
   resources/icon.qrc
   "${CMAKE_BINARY_DIR}/translations.qrc"
 )
+
 set_source_files_properties(org.usbguard1.xml PROPERTIES INCLUDE DBusTypes.h)
 qt5_add_dbus_interface(applet_SOURCES
   org.usbguard1.xml
@@ -78,8 +79,4 @@ install(TARGETS usbguard-applet-qt
 install(FILES usbguard-applet-qt.desktop
   DESTINATION "${CMAKE_INSTALL_DATADIR}/applications")
 install(FILES resources/usbguard-icon.svg
-  DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps")
-install(FILES resources/usbguard-icon-inactive.svg
-  DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps")
-  install(FILES resources/usbguard-icon-warning.svg
   DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps")

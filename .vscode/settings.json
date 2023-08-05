@@ -1,4 +1,8 @@
 {
     "cmake.cmakePath": "cmake",
     "extensions.ignoreRecommendations": true,
+    "files.associations": {
+        "qvector": "cpp",
+        "qaction": "cpp"
+    },
 }

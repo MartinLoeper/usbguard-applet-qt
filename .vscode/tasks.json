@@ -8,9 +8,38 @@
 			"targets": [
 				"usbguard-applet-qt"
 			],
-			"group": "build",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
 			"problemMatcher": [],
 			"detail": "CMake template build task"
+		},
+		{
+			"label": "Wrap",
+			"type": "shell",
+			"options": {
+				"cwd": "${workspaceFolder}/build"
+			},
+			"command": "source $stdenv/setup && rm -f .wrapped && makeQtWrapper usbguard-applet-qt .wrapped",
+			"dependsOn": [
+				"CMake: build"
+			]
+		},
+		{
+			"label": "Test",
+			"type": "shell",
+			"options": {
+				"cwd": "${workspaceFolder}/build",
+			},
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"command": "./.wrapped",
+			"dependsOn": [
+				"Wrap"
+			]
 		}
 	]
 }

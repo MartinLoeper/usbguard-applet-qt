@@ -5,4 +5,5 @@
         "qvector": "cpp",
         "qaction": "cpp"
     },
+    "cmake.configureOnOpen": false,
 }
